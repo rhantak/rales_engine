@@ -35,6 +35,7 @@ namespace :import_data do
     file = "data/items.txt"
     CSV.foreach(file, headers: true) do |row|
       item_hash = row.to_hash
+      item_hash['unit_price'] = (item_hash['unit_price'].to_f / 100)
       Item.create(item_hash)
     end
   end
@@ -51,6 +52,7 @@ namespace :import_data do
     file = "data/invoice_items.txt"
     CSV.foreach(file, headers: true) do |row|
       invoice_item_hash = row.to_hash
+      invoice_item_hash['unit_price'] = (invoice_item_hash['unit_price'].to_f / 100)
       InvoiceItem.create(invoice_item_hash)
     end
   end
