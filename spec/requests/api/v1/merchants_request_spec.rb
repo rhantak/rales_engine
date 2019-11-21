@@ -81,8 +81,33 @@ describe 'Merchants API' do
     expect(invoices["data"].count).to eq(4)
   end
 
-  xit "can return the top x merchants by revenue" do
+  it "can return the top x merchants by revenue" do
+    customer = Customer.create(first_name: 'Ryan', last_name: 'Hantak')
+    merchant_1 = Merchant.create(name: 'Big Ol Bikes')
+    merchant_2 = Merchant.create(name: 'Excellent Electronics')
+    merchant_3 = Merchant.create(name: 'Fabulous Furniture')
+    item_1 = merchant_1.items.create(name: 'Bicycle', description: 'A bike', unit_price: '143.55')
+    item_2 = merchant_2.items.create(name: 'Television', description: 'Large and flatscreen', unit_price: '299.99')
+    item_3 = merchant_3.items.create(name: 'Couch', description: 'Fancy leather sectional', unit_price: '999.99')
+    invoice_1 = customer.invoices.create(status: 'shipped', merchant_id: merchant_1.id)
+    invoice_2 = customer.invoices.create(status: 'shipped', merchant_id: merchant_2.id)
+    invoice_3 = customer.invoices.create(status: 'shipped', merchant_id: merchant_3.id)
+    invoice_item_1 = invoice_1.invoice_items.create(quantity: 50, unit_price: 143.55, item_id: item_1.id)
+    invoice_item_2 = invoice_2.invoice_items.create(quantity: 500, unit_price: 299.99, item_id: item_2.id)
+    invoice_item_3 = invoice_3.invoice_items.create(quantity: 2, unit_price: 999.99, item_id: item_3.id)
+    transaction_1 = invoice_1.transactions.create(credit_card_number: '123', credit_card_expiration_date: '010294', result: 'success')
+    transaction_2 = invoice_2.transactions.create(credit_card_number: '234', credit_card_expiration_date: '020395', result: 'success')
+    transaction_3 = invoice_3.transactions.create(credit_card_number: '345', credit_card_expiration_date: '030496', result: 'success')
 
+    get "/api/v1/merchants/most_revenue?quantity=2"
+
+    expect(response).to be_successful
+
+    top_merchants = JSON.parse(response.body)
+
+    expect(top_merchants["data"].count).to eq(2)
+    expect(top_merchants["data"][0]["id"]).to eq(merchant_2.id.to_s)
+    expect(top_merchants["data"][1]["id"]).to eq(merchant_1.id.to_s)
   end
 
   xit "can return the total revenue for a date across all merchants" do
