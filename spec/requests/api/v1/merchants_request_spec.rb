@@ -56,12 +56,29 @@ describe 'Merchants API' do
     expect(response.body).to_not eq("")
   end
 
-  xit 'can return a collection of items associated with a merchant' do
+  it 'can return a collection of items associated with a merchant' do
+    merchant = Merchant.create(name: 'Schroeder-Jerde')
+    create_list(:item, 5, merchant_id: merchant.id)
+    get "/api/v1/merchants/#{merchant.id}/items"
 
+    expect(response).to be_successful
+
+    items = JSON.parse(response.body)
+
+    expect(items["data"].count).to eq(5)
   end
 
-  xit 'can return a collection of invoices associated with the merchant' do
+  it 'can return a collection of invoices associated with the merchant' do
+    merchant = Merchant.create(name: 'Schroeder-Jerde')
+    customer = Customer.create(first_name: 'Ryan', last_name: 'Hantak')
+    create_list(:invoice, 4, merchant_id: merchant.id, customer_id: customer.id)
+    get "/api/v1/merchants/#{merchant.id}/invoices"
 
+    expect(response).to be_successful
+
+    invoices = JSON.parse(response.body)
+
+    expect(invoices["data"].count).to eq(4)
   end
 
   xit "can return the top x merchants by revenue" do
