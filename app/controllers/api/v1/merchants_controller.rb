@@ -43,4 +43,12 @@ class Api::V1::MerchantsController < ApplicationController
     render json: MerchantSerializer.new(merchants)
   end
 
+  def date_revenue
+    render json: {data: {attributes: {total_revenue: Invoice.revenue_on_date(params[:date]).to_s}}}
+  end
+
+  def favorite_customer
+    
+  end
+
 end
