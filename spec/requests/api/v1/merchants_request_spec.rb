@@ -160,7 +160,6 @@ describe 'Merchants API' do
     customer_1 = Customer.create(first_name: 'Ryan', last_name: 'Hantak')
     customer_2 = Customer.create(first_name: 'Bob', last_name: 'G')
     merchant = Merchant.create(name: 'Excellent Electronics')
-    item = merchant.items.create(name: 'Television', description: 'Large and flatscreen', unit_price: '299.99')
     invoice_1 = customer_1.invoices.create(status: 'shipped', merchant_id: merchant.id, customer_id: customer_1.id)
     invoice_2 = customer_1.invoices.create(status: 'shipped', merchant_id: merchant.id, customer_id: customer_1.id)
     invoice_3 = customer_2.invoices.create(status: 'shipped', merchant_id: merchant.id, customer_id: customer_2.id)
@@ -172,12 +171,12 @@ describe 'Merchants API' do
     invoice_4.transactions.create(credit_card_number: '123', credit_card_expiration_date: '010294', result: 'success')
     invoice_5.transactions.create(credit_card_number: '123', credit_card_expiration_date: '010294', result: 'success')
 
-    get '/api/v1/merchants/:id/favorite_customer'
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer"
 
     expect(response).to be_successful
 
     favorite = JSON.parse(response.body)
 
-    expect(favorite["data"]["id"]).to eq(customer_2.id)
+    expect(favorite["data"]["id"]).to eq(customer_2.id.to_s)
   end
 end
