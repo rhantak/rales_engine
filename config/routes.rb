@@ -12,6 +12,11 @@ Rails.application.routes.draw do
       get '/merchants/revenue', to: 'merchants#date_revenue'
       get '/merchants/:id/favorite_customer', to: 'merchants#favorite_customer'
       resources :merchants, only: [:index, :show]
+
+      get '/items/find', to: 'items#show'
+      get '/items/find_all', to: 'items#index'
+      get '/items/random', to: 'items#random'
+      resources :items, only: [:index, :show]
     end
   end
 end
