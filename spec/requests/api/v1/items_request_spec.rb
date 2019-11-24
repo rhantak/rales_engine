@@ -66,4 +66,37 @@ describe 'Items API' do
       expect(response.body).to_not eq("")
     end
   end
+
+  describe 'relationship endpoints' do
+    before(:each) do
+      @merchant = create(:merchant)
+      @item_1 = create(:item, merchant_id: @merchant.id)
+    end
+
+    it "can return the associated merchant" do
+      get "/api/v1/items/#{@item_1.id}/merchant"
+
+      expect(response).to be_successful
+
+      merchant = JSON.parse(response.body)
+
+      expect(merchant["data"]["id"]).to eq(@merchant.id.to_s)
+    end
+
+    it "can return a collection of associated invoice items" do
+      customer = create(:customer)
+      invoice = create(:invoice, customer_id: customer.id)
+      create_list(:invoice_item, 3, item_id: @item_1.id, invoice_id: invoice.id)
+
+      get "/api/v1/items/#{@item_1.id}/invoice_items"
+
+      expect(response).to be_successful
+
+      invoice_items = JSON.parse(response.body)
+
+      expect(invoice_items["data"].count).to eq(3)
+
+
+    end
+  end
 end
