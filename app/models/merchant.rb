@@ -15,4 +15,14 @@ class Merchant < ApplicationRecord
     limit(limit)
     # merge(Transaction.successful).
   end
+
+  def fave_customer
+    Merchant.joins(:transactions, :customers).
+    select('customers.*, count(transactions) as purchases').
+    where(merchants: {id: id}).
+    merge(Transaction.successful).
+    group('customers.id').
+    order('transactions.count desc').
+    first
+  end
 end
