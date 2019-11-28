@@ -64,4 +64,39 @@ require 'rails_helper'
         expect(response.body).to_not eq("")
       end
     end
+
+    describe 'relationship endpoints' do
+      before(:each) do
+        @customer = create(:customer)
+        @merchant = create(:merchant)
+        @invoice_1 =  create(:invoice, customer_id: @customer.id)
+        @invoice_2 =  create(:invoice, customer_id: @customer.id)
+        @item_1 = create(:item, merchant_id: @merchant.id)
+        @item_2 = create(:item, merchant_id: @merchant.id)
+        @ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id)
+        @ii_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id)
+        @ii_3 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_1.id)
+        @ii_4 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id)
+      end
+
+      it "can send the invoice which an invoice item belongs to" do
+        get "/api/v1/invoice_items/#{@ii_3.id}/invoice"
+
+        expect(response).to be_successful
+
+        invoice = JSON.parse(response.body)
+
+        expect(invoice["data"]["id"]).to eq(@invoice_2.id.to_s)
+      end
+
+      it "can send the item which an invoice item belongs to" do
+        get "/api/v1/invoice_items/#{@ii_3.id}/item"
+
+        expect(response).to be_successful
+
+        item = JSON.parse(response.body)
+
+        expect(item["data"]["id"]).to eq(@item_1.id.to_s)
+      end
+    end
   end
