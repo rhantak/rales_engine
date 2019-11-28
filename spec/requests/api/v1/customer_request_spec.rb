@@ -67,4 +67,38 @@ describe 'Customers API' do
       expect(response.body).to_not eq("")
     end
   end
+
+  describe 'relationship endpoints' do
+    before(:each) do
+      @customer_1 = create(:customer, first_name: 'Ryan', last_name: 'Hantak')
+      @customer_2 = create(:customer, first_name: 'Bob', last_name: 'Hantak')
+      create_list(:invoice, 2, customer_id: @customer_1.id)
+      create_list(:invoice, 2, customer_id: @customer_2.id)
+    end
+
+    it "can find all invoices associated with a customer" do
+      get "/api/v1/customers/#{@customer_1.id}/invoices"
+
+      expect(response).to be_successful
+
+      invoices = JSON.parse(response.body)
+
+      expect(invoices["data"].count).to eq(2)
+    end
+
+    it "can find all transactions associated with a customer" do
+      create(:transaction, invoice_id: @customer_1.invoices.first.id)
+      create(:transaction, invoice_id: @customer_1.invoices.last.id)
+      create(:transaction, invoice_id: @customer_2.invoices.first.id)
+      create(:transaction, invoice_id: @customer_2.invoices.last.id)
+
+      get "/api/v1/customers/#{@customer_1.id}/transactions"
+
+      expect(response).to be_successful
+
+      transactions = JSON.parse(response.body)
+
+      expect(transactions["data"].count).to eq(2)
+    end
+  end
 end
