@@ -19,8 +19,8 @@ describe 'Transactions API' do
       expect(transactions["data"].count).to eq(3)
     end
 
-    xit "can get one transaction by its id" do
-      id = create(:transaction, customer_id: @customer.id).id
+    it "can get one transaction by its id" do
+      id = create(:transaction, invoice_id: @invoice.id).id
 
       get "/api/v1/transactions/#{id}"
 
@@ -30,7 +30,7 @@ describe 'Transactions API' do
       expect(transaction["data"]["id"]).to eq(id.to_s)
     end
 
-    xit "can find a transaction by its attributes" do
+    it "can find a transaction by its attributes" do
       transaction_1 = create(:transaction, result: 'failure', invoice_id: @invoice.id)
       transaction_2 = create(:transaction, result: 'success', invoice_id: @invoice.id)
 
@@ -40,27 +40,26 @@ describe 'Transactions API' do
 
       api_transaction = JSON.parse(response.body)
 
-      expect(transaction_1.id.to_s).to eq(api_transaction["data"]["id"])
+      expect(transaction_2.id.to_s).to eq(api_transaction["data"]["id"])
     end
 
-    xit "can find all items matching an attribute" do
+    it "can find all items matching an attribute" do
       transaction_1 = create(:transaction, result: 'failure', invoice_id: @invoice.id)
       transaction_2 = create(:transaction, result: 'success', invoice_id: @invoice.id)
       transaction_3 = create(:transaction, result: 'success', invoice_id: @invoice.id)
 
-      get '/api/v1/transaction/find_all?result=success'
+      get '/api/v1/transactions/find_all?result=success'
 
       expect(response).to be_successful
 
       transactions = JSON.parse(response.body)
-
-      expect(transactions["data"].count).to eq(3)
-      expect(transactions["data"][1]["id"]).to eq(transaction_2.to.to_s)
-      expect(transactions["data"][2]["id"]).to eq(transaction_3.to.to_s)
+      expect(transactions["data"].count).to eq(2)
+      expect(transactions["data"][0]["id"]).to eq(transaction_2.id.to_s)
+      expect(transactions["data"][1]["id"]).to eq(transaction_3.id.to_s)
     end
 
-    xit "can send a random transaction" do
-      create_list(:transaction, 3, customer_id: @customer.id)
+    it "can send a random transaction" do
+      create_list(:transaction, 3, invoice_id: @invoice.id)
 
       get '/api/v1/transactions/random'
 
