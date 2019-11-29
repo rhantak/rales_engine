@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       get 'transactions/find', to: 'transactions/find#show'
       get 'transactions/find_all', to: 'transactions/find#index'
       get 'transactions/random', to: 'transactions/random#show'
+      get 'transactions/:id/invoice', to: 'transactions/invoices#show'
       resources :transactions, only: [:index, :show]
 
       get 'invoice_items/find', to: 'invoice_items/find#show'
