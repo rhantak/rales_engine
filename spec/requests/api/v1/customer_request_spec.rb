@@ -2,10 +2,6 @@ require 'rails_helper'
 
 describe 'Customers API' do
   describe 'record endpoints' do
-    before(:each) do
-      #
-    end
-
     it "sends a list of customers" do
       create_list(:customer, 4)
 
@@ -70,10 +66,11 @@ describe 'Customers API' do
 
   describe 'relationship endpoints' do
     before(:each) do
+      @merchant = create(:merchant)
       @customer_1 = create(:customer, first_name: 'Ryan', last_name: 'Hantak')
       @customer_2 = create(:customer, first_name: 'Bob', last_name: 'Hantak')
-      create_list(:invoice, 2, customer_id: @customer_1.id)
-      create_list(:invoice, 2, customer_id: @customer_2.id)
+      create_list(:invoice, 2, customer_id: @customer_1.id, merchant_id: @merchant.id)
+      create_list(:invoice, 2, customer_id: @customer_2.id, merchant_id: @merchant.id)
     end
 
     it "can find all invoices associated with a customer" do
