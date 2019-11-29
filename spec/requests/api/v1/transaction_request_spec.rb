@@ -69,4 +69,21 @@ describe 'Transactions API' do
       expect(response.body).to_not eq("")
     end
   end
+
+  describe 'relationship endpoints' do
+    it "can send the invoice associated with a transaction" do
+      merchant = create(:merchant)
+      customer = create(:customer)
+      invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+      transaction = create(:transaction, invoice_id: invoice.id)
+
+      get "/api/v1/transactions/#{transaction.id}/invoice"
+
+      expect(response).to be_successful
+
+      api_invoice = JSON.parse(response.body)
+
+      expect(api_invoice["data"]["id"]).to eq(invoice.id.to_s)
+    end
+  end
 end
