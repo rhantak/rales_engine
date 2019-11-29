@@ -4,8 +4,8 @@ require 'rails_helper'
       before(:each) do
         @customer = create(:customer)
         @merchant = create(:merchant)
-        @invoice_1 =  create(:invoice, customer_id: @customer.id)
-        @invoice_2 =  create(:invoice, customer_id: @customer.id)
+        @invoice_1 =  create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id)
+        @invoice_2 =  create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id)
         @item_1 = create(:item, merchant_id: @merchant.id)
         @item_2 = create(:item, merchant_id: @merchant.id)
         @ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id)
@@ -69,8 +69,8 @@ require 'rails_helper'
       before(:each) do
         @customer = create(:customer)
         @merchant = create(:merchant)
-        @invoice_1 =  create(:invoice, customer_id: @customer.id)
-        @invoice_2 =  create(:invoice, customer_id: @customer.id)
+        @invoice_1 =  create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id)
+        @invoice_2 =  create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id)
         @item_1 = create(:item, merchant_id: @merchant.id)
         @item_2 = create(:item, merchant_id: @merchant.id)
         @ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id)

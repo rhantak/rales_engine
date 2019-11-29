@@ -85,7 +85,7 @@ describe 'Items API' do
 
     it "can return a collection of associated invoice items" do
       customer = create(:customer)
-      invoice = create(:invoice, customer_id: customer.id)
+      invoice = create(:invoice, customer_id: customer.id, merchant_id: @merchant.id)
       create_list(:invoice_item, 3, item_id: @item_1.id, invoice_id: invoice.id)
 
       get "/api/v1/items/#{@item_1.id}/invoice_items"

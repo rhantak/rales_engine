@@ -3,8 +3,9 @@ require 'rails_helper'
 describe 'Transactions API' do
   describe 'record endpoints' do
     before(:each) do
+      @merchant = create(:merchant)
       @customer = create(:customer)
-      @invoice = create(:invoice, customer_id: @customer.id)
+      @invoice = create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id)
     end
 
     it "sends a list of transactions" do
