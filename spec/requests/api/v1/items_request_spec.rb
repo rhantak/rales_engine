@@ -103,10 +103,11 @@ describe 'Items API' do
       @merchant = create(:merchant)
       @customer = create(:customer)
     end
+
     it "can list a variable number of top items ranked by total revenue generated" do
-      item_1 = create(:item, merchant_id = @merchant.id)
-      item_2 = create(:item, merchant_id = @merchant.id)
-      item_3 = create(:item, merchant_id = @merchant.id)
+      item_1 = create(:item, merchant_id: @merchant.id)
+      item_2 = create(:item, merchant_id: @merchant.id)
+      item_3 = create(:item, merchant_id: @merchant.id)
 
       invoice = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id)
       create(:invoice_item, quantity: 1, unit_price: 10.0, invoice_id: invoice.id, item_id: item_1.id)
@@ -115,9 +116,13 @@ describe 'Items API' do
       create(:invoice_item, quantity: 4, unit_price: 25.0, invoice_id: invoice.id, item_id: item_2.id)
       create(:invoice_item, quantity: 5, unit_price: 30.0, invoice_id: invoice.id, item_id: item_3.id)
       create(:invoice_item, quantity: 6, unit_price: 35.0, invoice_id: invoice.id, item_id: item_3.id)
-      limit = 2
-      get "/api/v1/items/most_revenue?quantity=#{limit}"
 
+      create(:transaction, result: 'success', invoice_id: invoice.id)
+
+      limit = 2
+
+      get "/api/v1/items/most_revenue?quantity=#{limit}"
+      binding.pry
       expect(response).to be_successful
 
       top_items = JSON.parse(response.body)
@@ -128,7 +133,7 @@ describe 'Items API' do
     end
 
     xit "can return the date with the most sales for the given item" do
-      item = create(:item, merchant_id = @merchant.id)
+      item = create(:item, merchant_id: @merchant.id)
 
       invoice_1 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 25 Mar 2012 09:54:09 UTC +00:00")
       invoice_2 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 26 Mar 2012 09:54:09 UTC +00:00")
@@ -138,7 +143,7 @@ describe 'Items API' do
       # add invoice items for sales
 
       # add transactions for successes and failures
-      
+
       get "/api/v1/items/#{item.id}/best_day"
 
       expect(response).to be_successful
