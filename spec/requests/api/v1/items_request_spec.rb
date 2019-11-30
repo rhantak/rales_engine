@@ -95,8 +95,58 @@ describe 'Items API' do
       invoice_items = JSON.parse(response.body)
 
       expect(invoice_items["data"].count).to eq(3)
+    end
+  end
 
+  describe 'business intelligence endpoints' do
+    before(:each) do
+      @merchant = create(:merchant)
+      @customer = create(:customer)
+    end
 
+    it "can list a variable number of top items ranked by total revenue generated" do
+      item_1 = create(:item, merchant_id: @merchant.id)
+      item_2 = create(:item, merchant_id: @merchant.id)
+      item_3 = create(:item, merchant_id: @merchant.id)
+
+      invoice = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id)
+      create(:invoice_item, quantity: 1, unit_price: 10.0, invoice_id: invoice.id, item_id: item_1.id)
+      create(:invoice_item, quantity: 2, unit_price: 15.0, invoice_id: invoice.id, item_id: item_1.id)
+      create(:invoice_item, quantity: 3, unit_price: 20.0, invoice_id: invoice.id, item_id: item_2.id)
+      create(:invoice_item, quantity: 4, unit_price: 25.0, invoice_id: invoice.id, item_id: item_2.id)
+      create(:invoice_item, quantity: 5, unit_price: 30.0, invoice_id: invoice.id, item_id: item_3.id)
+      create(:invoice_item, quantity: 6, unit_price: 35.0, invoice_id: invoice.id, item_id: item_3.id)
+
+      create(:transaction, result: 'success', invoice_id: invoice.id)
+
+      limit = 2
+
+      get "/api/v1/items/most_revenue?quantity=#{limit}"
+      binding.pry
+      expect(response).to be_successful
+
+      top_items = JSON.parse(response.body)
+
+      expect(top_items["data"].count).to eq(2)
+      expect(top_items["data"][0]["id"]).to eq(item_3.id.to_s)
+      expect(top_items["data"][1]["id"]).to eq(item_2.id.to_s)
+    end
+
+    xit "can return the date with the most sales for the given item" do
+      item = create(:item, merchant_id: @merchant.id)
+
+      invoice_1 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 25 Mar 2012 09:54:09 UTC +00:00")
+      invoice_2 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 26 Mar 2012 09:54:09 UTC +00:00")
+      invoice_3 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 27 Mar 2012 09:54:09 UTC +00:00")
+      invoice_4 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 28 Mar 2012 09:54:09 UTC +00:00")
+
+      # add invoice items for sales
+
+      # add transactions for successes and failures
+
+      get "/api/v1/items/#{item.id}/best_day"
+
+      expect(response).to be_successful
     end
   end
 end
