@@ -1,6 +1,6 @@
 class Api::V1::Transactions::FindController < ApplicationController
   def index
-    render json: TransactionSerializer.new(Transaction.where(request.query_parameters))
+    render json: TransactionSerializer.new(Transaction.order(:id).where(request.query_parameters))
   end
 
   def show

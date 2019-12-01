@@ -14,4 +14,14 @@ class Item < ApplicationRecord
     order('revenue desc').
     limit(limit)
   end
+
+  def best_day
+    Item.joins(:invoices, :invoice_items, :transactions).
+    select('invoices.created_at, sum(invoice_items.quantity * invoice_items.unit_price) as revenue').
+    group('invoices.created_at').
+    where(items: {id: id}).
+    merge(Transaction.successful).
+    order('revenue desc').
+    first
+  end
 end
