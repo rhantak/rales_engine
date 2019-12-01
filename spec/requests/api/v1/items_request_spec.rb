@@ -122,7 +122,7 @@ describe 'Items API' do
       limit = 2
 
       get "/api/v1/items/most_revenue?quantity=#{limit}"
-      binding.pry
+
       expect(response).to be_successful
 
       top_items = JSON.parse(response.body)
