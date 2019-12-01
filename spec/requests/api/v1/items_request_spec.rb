@@ -132,7 +132,7 @@ describe 'Items API' do
       expect(top_items["data"][1]["id"]).to eq(item_2.id.to_s)
     end
 
-    xit "can return the date with the most sales for the given item" do
+    it "can return the date with the most sales for the given item" do
       item = create(:item, merchant_id: @merchant.id)
 
       invoice_1 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 25 Mar 2012 09:54:09 UTC +00:00")
@@ -140,13 +140,23 @@ describe 'Items API' do
       invoice_3 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 27 Mar 2012 09:54:09 UTC +00:00")
       invoice_4 = create(:invoice, merchant_id: @merchant.id, customer_id: @customer.id, created_at: "Sun, 28 Mar 2012 09:54:09 UTC +00:00")
 
-      # add invoice items for sales
+      create(:transaction, result: 'success', invoice_id: invoice_1.id)
+      create(:transaction, result: 'success', invoice_id: invoice_2.id)
+      create(:transaction, result: 'success', invoice_id: invoice_3.id)
+      create(:transaction, result: 'success', invoice_id: invoice_4.id)
 
-      # add transactions for successes and failures
+      create(:invoice_item, item_id: item.id, invoice_id: invoice_1.id, quantity: 10, unit_price: 10.00)
+      create(:invoice_item, item_id: item.id, invoice_id: invoice_2.id, quantity: 20, unit_price: 10.00)
+      create(:invoice_item, item_id: item.id, invoice_id: invoice_3.id, quantity: 30, unit_price: 10.00)
+      create(:invoice_item, item_id: item.id, invoice_id: invoice_4.id, quantity: 5, unit_price: 10.00)
 
       get "/api/v1/items/#{item.id}/best_day"
 
       expect(response).to be_successful
+
+      date = JSON.parse(response.body)
+
+      expect(date["data"]["date"]).to eq(invoice_3.created_at.to_date.strftime("%Y-%m-%d"))
     end
   end
 end
