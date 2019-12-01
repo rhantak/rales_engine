@@ -1,6 +1,6 @@
 class Api::V1::InvoiceItems::FindController < ApplicationController
   def index
-    render json: InvoiceItemSerializer.new(InvoiceItem.where(request.query_parameters))
+    render json: InvoiceItemSerializer.new(InvoiceItem.order(:id).where(request.query_parameters))
   end
 
   def show
