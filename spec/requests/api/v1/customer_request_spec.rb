@@ -98,4 +98,35 @@ describe 'Customers API' do
       expect(transactions["data"].count).to eq(2)
     end
   end
+
+  describe 'business intelligence endpoints' do
+    it 'can return the merchant where the customer has conducted the most successful transactions' do
+      merchant_1 = create(:merchant)
+      merchant_2 = create(:merchant)
+
+      customer = create(:customer)
+
+      invoice_1a = create(:invoice, merchant_id: merchant_1.id, customer_id: customer.id)
+      invoice_1b = create(:invoice, merchant_id: merchant_1.id, customer_id: customer.id)
+
+      invoice_2a = create(:invoice, merchant_id: merchant_2.id, customer_id: customer.id)
+      invoice_2b = create(:invoice, merchant_id: merchant_2.id, customer_id: customer.id)
+      invoice_2c = create(:invoice, merchant_id: merchant_2.id, customer_id: customer.id)
+
+      create(:transaction, result: 'success', invoice_id: invoice_1a.id)
+      create(:transaction, result: 'success', invoice_id: invoice_1b.id)
+
+      create(:transaction, result: 'success', invoice_id: invoice_2a.id)
+      create(:transaction, result: 'success', invoice_id: invoice_2b.id)
+      create(:transaction, result: 'success', invoice_id: invoice_2c.id)
+
+      get "/api/v1/customers/#{customer.id}/favorite_merchant"
+
+      expect(response).to be_successful
+
+      fave_merchant = JSON.parse(response.body)
+
+      expect(fave_merchant["data"]["id"]).to eq(merchant_2.id.to_s)
+    end
+  end
 end
