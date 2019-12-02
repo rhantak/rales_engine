@@ -1,20 +1,20 @@
 # README
 
-* Ruby version
+### Ruby version
 - Ruby 2.4.1
 - Rails 5.1.7
 
-* System dependencies
-
-* Configuration
+### Configuration
 - Clone repository from github
 - Within the directory, run bundle install
 
-* Database creation
+### Database creation
+Within the directory, run the commands:
 - `rails db:create`
 - `rails db:migrate`
 
-* Database initialization
+### Database initialization
+To import all data, run:
 - `rake import_data:create_all`
 
 * How to run the test suite
@@ -46,9 +46,9 @@ This endpoint will list the information for the given merchant.
 
 - `/merchants/find_all`
 This endpoint will list the information for all merchants matching a given value for any merchant attributes. The searchable attributes for merchants are:
-- name
-- created_at
-- updated_at
+  - name
+  - created_at
+  - updated_at
 
 - `/merchants/find`
 This endpoint will list the information for the first merchant in the database which matches a given value for any merchant attribute. The searchable attributes are the same as the find_all endpoint above.
@@ -84,12 +84,12 @@ This endpoint will list the information for the given item.
 
 - `/items/find_all`
 This endpoint will list the information for all items matching a given value for any item attributes. The searchable attributes for items are:
-- name
-- description
-- unit_price
-- created_at
-- updated_at
-- merchant_id
+  - name
+  - description
+  - unit_price
+  - created_at
+  - updated_at
+  - merchant_id
 
 - `/items/find`
 This endpoint will list the information for the first item in the database which matches a given value for any item attribute. The searchable attributes are the same as the find_all endpoint about.
@@ -123,10 +123,10 @@ This endpoint will list the information for the given customer.
 
 - `/customers/find_all`
 This endpoint will list the information for all customers matching a given value for any customer attributes. The searchable attributes for customers are:
-- first_name
-- last_name
-- created_at
-- updated_at
+  - first_name
+  - last_name
+  - created_at
+  - updated_at
 
 - `/customers/find`
 This endpoint will list the information for the first customer in the database which matches a given value for any customer attribute. The searchable attributes are the same as the find_all endpoint above.
@@ -157,11 +157,11 @@ This endpoint will list the information for the given invoice.
 
 - `/invoices/find_all`
 This endpoint will list the information for all invoices matching a given value for any invoice attribute. The searchable attributes for invoices are:
-- status
-- created_at
-- updated_at
-- customer_id
-- merchant_id
+  - status
+  - created_at
+  - updated_at
+  - customer_id
+  - merchant_id
 
 - `/invoices/find`
 This endpoint will all the user to search for the first invoice in the database which matches a given value for any invoice attribute. The searchable attributes are the same as the find_all endpoint above.
@@ -196,12 +196,12 @@ This endpoint will list the information for the given invoice item.
 
 - `/invoice_items/find_all`
 This endpoint will list the information for all invoice items matching a given value for any invoice item attributes. The searchable attributes for invoice items are:
-- quantity
-- unit_price
-- created_at
-- updated_at
-- invoice_id
-- item_id
+  - quantity
+  - unit_price
+  - created_at
+  - updated_at
+  - invoice_id
+  - item_id
 
 - `/invoice_items/find`
 This endpoint will list the information for the first invoice item in the database which matches a given value for any invoice item attribute. The searchable attributes are the same as the find_all above.
@@ -227,11 +227,11 @@ This endpoint will list the information for the given item.
 
 - `/transactions/find_all`
 This endpoint will list the information for all transactions matching a given value for any transaction attributes. The searchable attributes for transactions are:
-- credit_card_number
-- result
-- created_at
-- updated_at
-- invoice_id
+  - credit_card_number
+  - result
+  - created_at
+  - updated_at
+  - invoice_id
 
 - `/transactions/find`
 This endpoint will list the information for the first transaction in the database which matches a given value for any transaction attributes. The searchable attributes are the same as the find_all endpoint above.
