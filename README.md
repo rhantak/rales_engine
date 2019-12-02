@@ -17,10 +17,9 @@ Within the directory, run the commands:
 To import all data, run:
 - `rake import_data:create_all`
 
-* How to run the test suite
+### Test Suite
+- RSPEC, to run tests run the command:
 - `bundle exec rspec`
-
-* Services (job queues, cache servers, search engines, etc.)
 
 -----------------------------------------------------------------
 # Using the API Endpoints
