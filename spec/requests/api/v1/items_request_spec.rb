@@ -156,7 +156,7 @@ describe 'Items API' do
 
       date = JSON.parse(response.body)
 
-      expect(date["data"]["date"]).to eq(invoice_3.created_at.to_date.strftime("%Y-%m-%d"))
+      expect(date["data"]["attributes"]["best_day"]).to eq(invoice_3.created_at.to_date.strftime("%Y-%m-%d"))
     end
   end
 end
